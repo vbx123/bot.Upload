@@ -1,0 +1,14 @@
+[
+  {
+    "image": "photo/a.jpg",
+    "prompt": "Prompts/a.txt"
+  },
+  {
+    "image": "photo/b.jpg",
+    "prompt": "Prompts/b.txt"
+  },
+  {
+    "image": "photo/c.jpg",
+    "prompt": "Prompts/c.txt"
+  }
+]
