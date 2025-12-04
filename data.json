@@ -1,14 +1,15 @@
 [
   {
-    "image": "photo/a.jpg",
+    "image": "photo/a.png",
     "prompt": "Prompts/a.txt"
   },
   {
-    "image": "photo/b.jpg",
+    "image": "photo/b.png",
     "prompt": "Prompts/b.txt"
   },
   {
-    "image": "photo/c.jpg",
+    "image": "photo/c.png",
     "prompt": "Prompts/c.txt"
   }
 ]
+
