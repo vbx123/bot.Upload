@@ -1,303 +1,140 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>معرض الصور — برومبتس</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قائمة الاستيكرات</title>
+
 <style>
-  :root{
-    --bg:#070707; --card:#0f1113; --muted:#9aa6b2; --accent:#26d07b;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:linear-gradient(180deg,#070707 0%, #0b0b0c 100%);
-    color:#fff; font-family:"Cairo",system-ui,Segoe UI,Arial; -webkit-font-smoothing:antialiased;
+  :root {
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #222;
+    --primary: #0099ff;
   }
 
-  /* top bar */
-  .top-bar{
-    position:sticky; top:0; z-index:20;
-    background:rgba(10,10,10,0.98); border-bottom:1px solid rgba(255,255,255,0.03);
-    padding:14px 12px; text-align:center;
-    font-weight:700; color:var(--accent); font-size:17px;
+  body {
+    margin: 0;
+    padding: 20px;
+    background: var(--bg);
+    font-family: 'Cairo', sans-serif;
   }
 
-  .wrap{padding:18px; display:flex; flex-direction:column; gap:18px; align-items:center; max-width:800px; margin:0 auto;}
-
-  /* grid - mobile first: single column large cards */
-  .grid{width:100%; display:flex; flex-direction:column; gap:18px; align-items:center;}
-
-  /* card */
-  .card{
-    width:100%; max-width:640px; background:var(--card); border-radius:16px; padding:14px; position:relative;
-    box-shadow:0 8px 28px rgba(0,0,0,0.6); transition:transform .18s, box-shadow .18s;
-  }
-  .card:hover{ transform:translateY(-6px); box-shadow:0 18px 48px rgba(0,0,0,0.7); }
-
-  .imgwrap{width:100%; border-radius:12px; overflow:hidden; background:linear-gradient(180deg,#0c0c0c, #111);}
-  .imgwrap img{display:block; width:100%; height:360px; object-fit:cover; cursor:pointer;}
-
-  .meta{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;}
-  .label{font-weight:700; font-size:15px; color:#fff; text-align:right}
-  .preview{color:var(--muted); font-size:13px; text-align:left; flex:1}
-
-  .copy-btn{
-    background:var(--accent); color:#000; border:none; padding:10px 14px; border-radius:10px; font-weight:800;
-    cursor:pointer; box-shadow:0 8px 20px rgba(38,208,123,0.14);
+  h1 {
+    text-align: center;
+    color: var(--text);
+    margin-bottom: 20px;
   }
 
-  .no-data{color:#bfc7cf; margin-top:40px; font-size:18px; text-align:center}
+  .search-box {
+    width: 100%;
+    max-width: 450px;
+    margin: 10px auto 25px;
+    display: flex;
+    gap: 10px;
+  }
 
-  /* dialog */
-  #dialog{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999;
-    background:rgba(0,0,0,0.78); backdrop-filter:blur(6px); padding:18px;}
-  #dialog-box{width:100%; max-width:720px; background:#0e0e0f; border-radius:14px; padding:14px; position:relative}
-  #dialog img{width:100%; max-height:60vh; object-fit:contain; border-radius:10px; display:block}
-  .close-x{position:absolute; top:10px; right:12px; font-size:28px; color:#ff6b6b; cursor:pointer; font-weight:700}
-  .prompt-box{margin-top:12px; background:#0b0b0c; border-radius:10px; padding:10px; max-height:220px; overflow:auto; border:1px solid rgba(255,255,255,0.03); color:#e6eef6; text-align:right; line-height:1.65}
-  .dialog-copy{margin-top:12px; width:100%; background:var(--accent); color:#000; padding:12px; border-radius:10px; font-weight:800; border:none; cursor:pointer}
+  .search-box input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+  }
 
-  /* toast */
-  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:28px; background:#0d1112; padding:10px 14px; border-radius:10px; display:none; box-shadow:0 8px 30px rgba(0,0,0,0.6); color:#cfeee0}
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
 
-  /* responsive: tablets show two-column */
-  @media(min-width:720px){
-    .grid{flex-direction:row; flex-wrap:wrap; justify-content:center;}
-    .card{width:calc(50% - 20px); max-width:360px}
-    .imgwrap img{height:260px}
+  .card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: 0.25s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+
+  .card img {
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .title {
+    font-size: 17px;
+    margin: 10px 0 5px;
+    color: var(--text);
+    font-weight: bold;
+  }
+
+  .date {
+    font-size: 14px;
+    color: #666;
   }
 </style>
 </head>
+
 <body>
-  <div class="top-bar">انسخ الوصف واذهب لإنشاء صورتك</div>
-  <main class="wrap">
-    <section id="grid" class="grid" aria-live="polite"></section>
-    <div id="nodata" class="no-data" style="display:none">لا توجد بيانات حالياً</div>
-  </main>
+<h1>📦 الاستيكرات</h1>
 
-  <!-- dialog -->
-  <div id="dialog" role="dialog" aria-modal="true">
-    <div id="dialog-box">
-      <div class="close-x" onclick="closeDialog()">×</div>
-      <img id="dialog-image" src="" alt="عرض الصورة">
-      <div id="dialog-prompt" class="prompt-box">جارٍ تحميل الوصف...</div>
-      <button id="dialog-copy" class="dialog-copy">نسخ الوصف</button>
-    </div>
-  </div>
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="ابحث عن استيكر...">
+</div>
 
-  <div id="toast" class="toast">تم النسخ!</div>
+<div class="container" id="listContainer"></div>
 
 <script>
-/*
-  HTML page that:
-  - loads data.json relative to the repo root
-  - creates cards for each item {image, prompt}
-  - opens dialog with larger image and prompt text
-  - copies prompt text to clipboard (with fallback to raw.githubusercontent if needed)
-  - logs errors in console and shows user-friendly messages
-*/
-
-const GITHUB_USER = "mkomkomko127-byte";
-const GITHUB_REPO = "ind";
-const GITHUB_BRANCH = "main"; // change if your branch is different
-
-const grid = document.getElementById('grid');
-const nodata = document.getElementById('nodata');
-const dialog = document.getElementById('dialog');
-const dialogImage = document.getElementById('dialog-image');
-const dialogPrompt = document.getElementById('dialog-prompt');
-const dialogCopy = document.getElementById('dialog-copy');
-const toast = document.getElementById('toast');
-
-function showToast(txt='تم النسخ!'){
-  toast.textContent = txt;
-  toast.style.display = 'block';
-  setTimeout(()=> toast.style.display='none', 1400);
+// تحميل البيانات من ملف JSON خارجي
+async function loadData() {
+  const response = await fetch("data.json");
+  const data = await response.json();
+  renderList(data);
 }
 
-// safe fetch wrapper with error details
-async function safeFetch(url){
-  try{
-    const r = await fetch(url, {cache: 'no-store'});
-    if(!r.ok) throw new Error(`${r.status} ${r.statusText}`);
-    return r;
-  }catch(err){
-    console.error('fetch error for', url, err);
-    throw err;
-  }
+// رسم العناصر
+function renderList(data) {
+  const container = document.getElementById("listContainer");
+
+  container.innerHTML = "";
+
+  data.forEach(item => {
+    let card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${item.image}" alt="image">
+      <div class="title">${item.title}</div>
+      <div class="date">📅 ${item.date}</div>
+    `;
+
+    container.appendChild(card);
+  });
 }
 
-// build fallback raw URL for prompt if direct fails
-function rawUrlFor(path){
-  // path may be like "Prompts/mm.txt" or "./Prompts/mm.txt" or "photo/mm.jpg"
-  const clean = path.replace(/^\.\//, '');
-  return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${clean}`;
-}
+// البحث
+document.getElementById("searchInput").addEventListener("input", async function () {
+  const response = await fetch("stickers.json");
+  let data = await response.json();
 
-async function loadDataJson(){
-  try{
-    // try load local data.json first (same-origin)
-    const res = await safeFetch('data.json');
-    const list = await res.json();
-    return list;
-  }catch(errLocal){
-    console.warn('Could not load data.json locally:', errLocal);
-    // as fallback, try raw.githubusercontent (may be blocked on some networks)
-    const raw = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data.json`;
-    try{
-      const r2 = await safeFetch(raw);
-      const list2 = await r2.json();
-      return list2;
-    }catch(errRaw){
-      console.error('Failed to load data.json from raw.githubusercontent:', errRaw);
-      throw new Error('فشل تحميل ملف data.json — تأكد أنه موجود في جذر الريبو وأن GitHub Pages مفعل أو افتح الرابط: ' + raw);
-    }
-  }
-}
+  let searchValue = this.value.trim();
 
-function createCard(item){
-  const card = document.createElement('article');
-  card.className = 'card';
+  let filtered = data.filter(item =>
+    item.title.includes(searchValue)
+  );
 
-  const imgwrap = document.createElement('div'); imgwrap.className='imgwrap';
-  const img = document.createElement('img'); img.alt = 'صورة';
-  img.src = item.image;
+  renderList(filtered);
+});
 
-  // handle image error (show placeholder)
-  img.onerror = () => {
-    console.warn('Image failed to load:', item.image);
-    img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450"><rect width="100%" height="100%" fill="#0b0b0b"/><text x="50%" y="50%" fill="#9aa6b2" font-size="22" font-family="Arial" text-anchor="middle" dominant-baseline="middle">الصورة غير متاحة</text></svg>`
-    );
-  };
-
-  imgwrap.appendChild(img);
-
-  // meta area
-  const meta = document.createElement('div'); meta.className='meta';
-  const label = document.createElement('div'); label.className='label';
-  // derive filename without extension for label
-  const nm = item.image.split('/').pop().replace(/\.[^/.]+$/, '');
-  label.textContent = nm;
-
-  const preview = document.createElement('div'); preview.className='preview';
-  preview.textContent = ''; // we'll lazy-load preview if needed
-
-  const btn = document.createElement('button'); btn.className='copy-btn'; btn.textContent='نسخ';
-  btn.onclick = async (ev) => {
-    ev.stopPropagation();
-    await copyPromptFor(item);
-  };
-
-  meta.appendChild(label);
-  meta.appendChild(preview);
-  card.appendChild(btn);
-  card.appendChild(imgwrap);
-  card.appendChild(meta);
-
-  // click opens dialog
-  img.addEventListener('click', () => openDialog(item));
-
-  return card;
-}
-
-async function copyPromptFor(item){
-  const p = item.prompt;
-  if(!p){
-    alert('لا يوجد مسار للبرومبت في ملف data.json');
-    return;
-  }
-  try {
-    // try fetch prompt from given path (relative)
-    const resp = await safeFetch(p);
-    const txt = await resp.text();
-    await navigator.clipboard.writeText(txt);
-    showToast('✔ تم نسخ الوصف');
-  } catch (err){
-    console.warn('direct prompt fetch failed, trying raw fallback...', err);
-    const fallback = rawUrlFor(p);
-    try {
-      const r2 = await safeFetch(fallback);
-      const txt2 = await r2.text();
-      await navigator.clipboard.writeText(txt2);
-      showToast('✔ تم نسخ الوصف (fallback)');
-    } catch (err2){
-      console.error('both prompt fetch attempts failed:', err2);
-      alert('فشل نسخ الوصف — افتح Console للمزيد من التفاصيل أو تأكد من مسار البرومبت في data.json');
-    }
-  }
-}
-
-async function openDialog(item){
-  dialog.style.display = 'flex';
-  dialogImage.src = item.image;
-  dialogPrompt.textContent = 'جارٍ تحميل الوصف...';
-
-  // try load prompt
-  try{
-    const r = await safeFetch(item.prompt);
-    const txt = await r.text();
-    dialogPrompt.textContent = txt;
-    dialogCopy.onclick = async () => {
-      await navigator.clipboard.writeText(txt);
-      showToast('✔ تم نسخ الوصف');
-    };
-  }catch(err){
-    console.warn('dialog direct prompt fetch failed, trying raw fallback', err);
-    try{
-      const r2 = await safeFetch(rawUrlFor(item.prompt));
-      const txt2 = await r2.text();
-      dialogPrompt.textContent = txt2;
-      dialogCopy.onclick = async () => {
-        await navigator.clipboard.writeText(txt2);
-        showToast('✔ تم نسخ الوصف (fallback)');
-      };
-    }catch(err2){
-      console.error('failed to fetch prompt for dialog', err2);
-      dialogPrompt.textContent = 'تعذر تحميل الوصف. راجع مسار البرومبت أو افتح Console للمزيد من التفاصيل.';
-      dialogCopy.onclick = () => { alert('لا يمكن نسخ — لم نتمكن من تحميل الوصف'); };
-    }
-  }
-}
-
-function closeDialog(){
-  dialog.style.display = 'none';
-  dialogImage.src = '';
-  dialogPrompt.textContent = '';
-  dialogCopy.onclick = null;
-}
-
-async function init(){
-  try{
-    const list = await loadDataJson();
-    if(!Array.isArray(list) || list.length === 0){
-      nodata.style.display='block';
-      console.log('data.json is empty or invalid');
-      return;
-    }
-    nodata.style.display='none';
-    for(const it of list){
-      // basic validation
-      if(!it.image || !it.prompt){
-        console.warn('skipping invalid item (missing image/prompt):', it);
-        continue;
-      }
-      const card = createCard(it);
-      grid.appendChild(card);
-    }
-  }catch(err){
-    console.error('Init failed:', err);
-    // show friendly message
-    nodata.style.display='block';
-    nodata.textContent = 'حدث خطأ في تحميل البيانات — افتح Console لمزيد من التفاصيل.';
-  }
-}
-
-init();
-
-// expose close for inline onclick
-window.closeDialog = closeDialog;
+loadData();
 </script>
+
 </body>
 </html>
