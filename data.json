@@ -1,15 +1,21 @@
 [
   {
-    "image": "photo/a.png",
-    "prompt": "Prompts/a.txt"
+    "image": "images/a.png",
+    "prompt": "prompts/a.txt",
+    "title": "منظر ليلي رائع",
+    "date": "2025-12-06"
   },
   {
-    "image": "photo/b.png",
-    "prompt": "Prompts/b.txt"
+    "image": "images/b.png",
+    "prompt": "prompts/b.txt",
+    "title": "شارع في وقت الغروب",
+    "date": "2025-11-28"
   },
   {
-    "image": "photo/c.png",
-    "prompt": "Prompts/c.txt"
+    "image": "images/c.png",
+    "prompt": "prompts/c.txt",
+    "title": "سيارة كلاسيكية",
+    "date": "2025-10-15"
   }
 ]
 
