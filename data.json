@@ -1,21 +1,22 @@
 [
   {
     "image": "images/a.png",
-    "prompt": "prompts/a.txt",
+    "prompt": "Prompts/a.txt",
     "title": "منظر ليلي رائع",
     "date": "2025-12-06"
   },
   {
     "image": "images/b.png",
-    "prompt": "prompts/b.txt",
+    "prompt": "Prompts/b.txt",
     "title": "شارع في وقت الغروب",
     "date": "2025-11-28"
   },
   {
     "image": "images/c.png",
-    "prompt": "prompts/c.txt",
+    "prompt": "Prompts/c.txt",
     "title": "سيارة كلاسيكية",
     "date": "2025-10-15"
   }
 ]
+
 
