@@ -156,6 +156,16 @@ const searchInput = document.getElementById('search');
 const sortSelect = document.getElementById('sort');
 const nodata = document.getElementById('nodata');
 
+const dialog = document.getElementById("dialog");
+const dialogBox = document.getElementById("dialog-box");
+
+/* إغلاق الديالوج عند الضغط خارج الصندوق */
+window.addEventListener("click", e => {
+  if(e.target === dialog){
+    closeDialog();
+  }
+});
+
 /* ========== تحميل JSON ========== */
 async function loadData(){
   const res = await fetch("data.json");
@@ -214,7 +224,10 @@ async function openDialog(item){
     showToast("تم النسخ!");
   };
 }
-function closeDialog(){ dialog.style.display="none"; }
+
+function closeDialog(){
+  dialog.style.display="none";
+}
 
 /* ========== Toast ========== */
 function showToast(t){
@@ -255,6 +268,7 @@ searchInput.oninput = render;
 sortSelect.onchange = render;
 
 loadData();
+
 </script>
 
 </body>
