@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 const PENDING_DIR = path.join(process.cwd(), 'pending');
-const PHOTOS_DIR = path.join(process.cwd(), 'photos');
-const PROMPTS_DIR = path.join(process.cwd(), 'prompts');
+const images_DIR = path.join(process.cwd(), 'images');
+const PROMPTS_DIR = path.join(process.cwd(), 'Prompts');
 const DATA_FILE = path.join(process.cwd(), 'data.json');
 
-if (!fs.existsSync(PHOTOS_DIR)) fs.mkdirSync(PHOTOS_DIR);
+if (!fs.existsSync(images_DIR)) fs.mkdirSync(images_DIR);
 if (!fs.existsSync(PROMPTS_DIR)) fs.mkdirSync(PROMPTS_DIR);
 if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, '[]');
 
