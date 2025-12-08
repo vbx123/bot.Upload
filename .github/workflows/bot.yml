@@ -1,44 +1,35 @@
-name: Telegram Importer (run once)
+name: Pending Uploader
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"   # تشغيل كل ساعة (اختياري)
-
-permissions:
-  contents: write
+    - cron: "*/10 * * * *"  # كل 10 دقائق
+  workflow_dispatch:
 
 jobs:
-  run-bot:
+  upload:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: true
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install node-fetch@2
+      - name: Install deps
+        run: npm install
 
       - name: Run importer
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-        run: node bot.js
+        run: node actions-importer.js
 
-      - name: Commit changes
+      - name: Commit & push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add photo prompts data.json last_update.json || true
+          git add photos prompts data.json
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "Auto: add Telegram imports" || true
+            git commit -m "Auto upload pending"
             git push origin HEAD
           fi
