@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>معرض الصور — مصر القديمة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#000033;
+    --card:#0f1113;
+    --muted:#9aa6b2;
+    --accent:#26d07b;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0; background:var(--bg);
+    color:#fff; font-family:"Cairo",system-ui;
+  }
+
+  /* top bar */
+  .top-bar{
+    position:sticky; top:0; z-index:20;
+    background:#000044; border-bottom:1px solid rgba(255,255,255,0.05);
+    padding:14px 12px; text-align:center;
+    font-weight:700; color:var(--accent); font-size:17px;
+  }
+
+  .wrap{padding:18px; max-width:900px; margin:0 auto;}
+
+  /* search + filter row */
+  .controls{
+    display:flex; gap:10px; margin-bottom:20px;
+  }
+
+  .controls input{
+    flex:1; padding:10px 12px;
+    border-radius:10px; border:none;
+    background:#0e0e22; color:#fff;
+    font-size:14px;
+  }
+
+  .controls select{
+    padding:10px; border-radius:10px;
+    background:#0e0e22; color:#fff; border:none;
+    font-size:14px;
+  }
+
+  .grid{
+    display:flex; flex-direction:column; gap:18px;
+  }
+
+  .card{
+    background:var(--card); border-radius:16px;
+    padding:14px; position:relative;
+    transition:.2s;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 40px rgba(0,0,0,0.5);
+  }
+
+  /* date top left */
+  .date{
+    position:absolute; top:8px; left:12px;
+    font-size:11px; color:#ccc;
+  }
+
+  .imgwrap img{
+    width:100%; height:320px; object-fit:cover;
+    border-radius:12px; cursor:pointer;
+  }
+
+  .title{
+    margin-top:10px; font-size:15px; font-weight:700;
+  }
+
+  .copy-btn{
+    margin-top:10px;
+    width:100%;
+    background:var(--accent); color:#000; border:none;
+    padding:10px; border-radius:10px; font-weight:700;
+    cursor:pointer;
+  }
+
+  /* dialog */
+  #dialog{position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.75); padding:20px; z-index:999;}
+  #dialog-box{
+    background:#0e0e0f; border-radius:14px; padding:14px; width:100%; max-width:700px; position:relative;
+  }
+  #dialog img{
+    width:100%; max-height:60vh; object-fit:contain;
+    border-radius:10px;
+  }
+  .close-x{position:absolute; top:10px; right:12px; font-size:28px; cursor:pointer; color:#ff6b6b;}
+  .prompt-box{
+    margin-top:12px; padding:10px; background:#0b0b0c;
+    border-radius:10px; border:1px solid rgba(255,255,255,0.05);
+    max-height:220px; overflow:auto; color:#eee; line-height:1.6;
+  }
+  .dialog-copy{
+    margin-top:12px; width:100%; background:var(--accent);
+    color:#000; padding:12px; border-radius:10px; font-weight:800;
+    border:none; cursor:pointer;
+  }
+
+  .toast{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:28px; background:#0d1112; padding:10px 14px;
+    border-radius:10px; display:none;
+  }
+</style>
+</head>
+
+<body>
+<div class="top-bar">انسخ الوصف وابدأ تصميم صورتك</div>
+
+<main class="wrap">
+
+  <!-- Search + filter -->
+  <div class="controls">
+    <input type="text" id="search" placeholder="ابحث بالعنوان...">
+    <select id="sort">
+      <option value="new">الأحدث</option>
+      <option value="old">الأقدم</option>
+    </select>
+  </div>
+
+  <section id="grid" class="grid"></section>
+  <div id="nodata" style="text-align:center; color:#ccc; margin-top:20px; display:none">
+    لا توجد نتائج
+  </div>
+</main>
+
+<!-- dialog -->
+<div id="dialog">
+  <div id="dialog-box">
+    <div class="close-x" onclick="closeDialog()">×</div>
+    <img id="dialog-image" src="">
+    <div id="dialog-prompt" class="prompt-box">جارٍ التحميل...</div>
+    <button id="dialog-copy" class="dialog-copy">نسخ الوصف</button>
+  </div>
+</div>
+
+<div id="toast" class="toast">تم النسخ!</div>
+
+<script>
+let allData = [];
+const grid = document.getElementById('grid');
+const searchInput = document.getElementById('search');
+const sortSelect = document.getElementById('sort');
+const nodata = document.getElementById('nodata');
+
+const dialog = document.getElementById("dialog");
+const dialogBox = document.getElementById("dialog-box");
+
+/* إغلاق الديالوج عند الضغط خارج الصندوق */
+window.addEventListener("click", e => {
+  if(e.target === dialog){
+    closeDialog();
+  }
+});
+
+/* ========== تحميل JSON ========== */
+async function loadData(){
+  const res = await fetch("misr.json");
+  allData = await res.json();
+  render();
+}
+
+/* ========== بناء الكارت ========== */
+function createCard(item){
+  const card = document.createElement('div');
+  card.className = "card";
+
+  const date = document.createElement("div");
+  date.className = "date";
+  date.textContent = item.date;
+
+  const imgwrap = document.createElement("div");
+  imgwrap.className = "imgwrap";
+  const img = document.createElement("img");
+  img.src = item.image;
+  img.onclick = ()=> openDialog(item);
+  imgwrap.appendChild(img);
+
+  const title = document.createElement("div");
+  title.className = "title";
+  title.textContent = item.title;
+
+  const btn = document.createElement("button");
+  btn.className = "copy-btn";
+  btn.textContent = "نسخ الوصف";
+  btn.onclick = ()=> copyPrompt(item);
+
+  card.append(date, imgwrap, title, btn);
+  return card;
+}
+
+/* ========== نسخ الوصف ========== */
+async function copyPrompt(item){
+  const r = await fetch(item.prompt);
+  const txt = await r.text();
+  await navigator.clipboard.writeText(txt);
+  showToast("تم النسخ!");
+}
+
+/* ========== عرض في نافذة ========== */
+async function openDialog(item){
+  dialog.style.display="flex";
+  document.getElementById("dialog-image").src = item.image;
+
+  const r = await fetch(item.prompt);
+  const txt = await r.text();
+  document.getElementById("dialog-prompt").textContent = txt;
+
+  document.getElementById("dialog-copy").onclick = ()=>{
+    navigator.clipboard.writeText(txt);
+    showToast("تم النسخ!");
+  };
+}
+
+function closeDialog(){
+  dialog.style.display="none";
+}
+
+/* ========== Toast ========== */
+function showToast(t){
+  const toast=document.getElementById("toast");
+  toast.textContent=t;
+  toast.style.display="block";
+  setTimeout(()=> toast.style.display="none",1200);
+}
+
+/* ========== البحث + الترتيب ========== */
+function render(){
+  grid.innerHTML="";
+
+  let filtered = [...allData];
+
+  // search
+  const q = searchInput.value.trim();
+  if(q.length > 0){
+    filtered = filtered.filter(e => e.title.includes(q));
+  }
+
+  // sort
+  filtered.sort((a,b)=>{
+    if(sortSelect.value==="new")
+      return new Date(b.date) - new Date(a.date);
+    else
+      return new Date(a.date) - new Date(b.date);
+  });
+
+  // show or hide "no results"
+  nodata.style.display = filtered.length === 0 ? "block":"none";
+
+  filtered.forEach(item => grid.appendChild(createCard(item)));
+}
+
+/* ========== events ========== */
+searchInput.oninput = render;
+sortSelect.onchange = render;
+
+loadData();
+
+</script>
+
+</body>
+</html>
