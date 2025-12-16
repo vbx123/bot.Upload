@@ -169,8 +169,7 @@ window.addEventListener("click", e => {
 
 /* ========== تحميل JSON ========== */
 async function loadData(){
-  const res = await fetch("
-Your_Portrait.json");
+  const res = await fetch("Your_Portrait.json");
   allData = await res.json();
   render();
 }
